@@ -1,0 +1,131 @@
+\hypertarget{i2c_8h}{}\doxysection{i2c.\+h File Reference}
+\label{i2c_8h}\index{i2c.h@{i2c.h}}
+{\ttfamily \#include \char`\"{}main.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f302x8.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{i2c_8h_a40c3bf078d18e87828d79c0cfe50a14b}{my\+I2\+C\+\_\+\+SUCCESS}}~0x01
+\item 
+\#define \mbox{\hyperlink{i2c_8h_aaab4c026e2bed701139ab91d9bcbb306}{my\+I2\+C\+\_\+\+FAILURE}}~0x00
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45}{I2\+C\+\_\+\+Status}} \{ \mbox{\hyperlink{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45afe93bf8a72b89e82c9bd0e50226476ff}{I2\+C\+\_\+\+FAILURE}} = 0x00
+, \mbox{\hyperlink{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45afedca644218d27de7df7cd797d17c8b9}{I2\+C\+\_\+\+SUCCES}} = 0x01
+, \mbox{\hyperlink{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45a49e65f3960437d80b8328e7898cc90de}{I2\+C\+\_\+\+BUSY}} = 0x02
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{i2c_8h_a8ccbe0d3dceb6c6839e7bf224cfad689}{I2\+C\+\_\+\+Init}} ()
+\begin{DoxyCompactList}\small\item\em This function initializes the I2\+C2 peripherial. \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45}{I2\+C\+\_\+\+Status}} \mbox{\hyperlink{i2c_8h_ab1568726f3dc300efe03e5b3d9a2bbc4}{I2\+C\+\_\+write\+Byte\+Stream}} (uint8\+\_\+t slave\+Addr, uint8\+\_\+t mem\+Addr, uint8\+\_\+t $\ast$p\+Data, uint8\+\_\+t data\+Len)
+\begin{DoxyCompactList}\small\item\em write a byte stream to given memory location of a slave in blocking mode \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45}{I2\+C\+\_\+\+Status}} \mbox{\hyperlink{i2c_8h_aeea95aa7e7cee73d66e75b9dd3b3e846}{I2\+C\+\_\+read\+Byte\+Stream}} (uint8\+\_\+t slave\+Addr, uint8\+\_\+t mem\+Addr, uint8\+\_\+t $\ast$p\+Data, uint8\+\_\+t data\+Len)
+\begin{DoxyCompactList}\small\item\em read byte stream from given slave memory location in polling mode. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{i2c_8h_aaab4c026e2bed701139ab91d9bcbb306}\label{i2c_8h_aaab4c026e2bed701139ab91d9bcbb306}} 
+\index{i2c.h@{i2c.h}!myI2C\_FAILURE@{myI2C\_FAILURE}}
+\index{myI2C\_FAILURE@{myI2C\_FAILURE}!i2c.h@{i2c.h}}
+\doxysubsubsection{\texorpdfstring{myI2C\_FAILURE}{myI2C\_FAILURE}}
+{\footnotesize\ttfamily \#define my\+I2\+C\+\_\+\+FAILURE~0x00}
+
+\mbox{\Hypertarget{i2c_8h_a40c3bf078d18e87828d79c0cfe50a14b}\label{i2c_8h_a40c3bf078d18e87828d79c0cfe50a14b}} 
+\index{i2c.h@{i2c.h}!myI2C\_SUCCESS@{myI2C\_SUCCESS}}
+\index{myI2C\_SUCCESS@{myI2C\_SUCCESS}!i2c.h@{i2c.h}}
+\doxysubsubsection{\texorpdfstring{myI2C\_SUCCESS}{myI2C\_SUCCESS}}
+{\footnotesize\ttfamily \#define my\+I2\+C\+\_\+\+SUCCESS~0x01}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45}\label{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45}} 
+\index{i2c.h@{i2c.h}!I2C\_Status@{I2C\_Status}}
+\index{I2C\_Status@{I2C\_Status}!i2c.h@{i2c.h}}
+\doxysubsubsection{\texorpdfstring{I2C\_Status}{I2C\_Status}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45}{I2\+C\+\_\+\+Status}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{I2C\_FAILURE@{I2C\_FAILURE}!i2c.h@{i2c.h}}\index{i2c.h@{i2c.h}!I2C\_FAILURE@{I2C\_FAILURE}}}\mbox{\Hypertarget{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45afe93bf8a72b89e82c9bd0e50226476ff}\label{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45afe93bf8a72b89e82c9bd0e50226476ff}} 
+I2\+C\+\_\+\+FAILURE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{I2C\_SUCCES@{I2C\_SUCCES}!i2c.h@{i2c.h}}\index{i2c.h@{i2c.h}!I2C\_SUCCES@{I2C\_SUCCES}}}\mbox{\Hypertarget{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45afedca644218d27de7df7cd797d17c8b9}\label{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45afedca644218d27de7df7cd797d17c8b9}} 
+I2\+C\+\_\+\+SUCCES&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{I2C\_BUSY@{I2C\_BUSY}!i2c.h@{i2c.h}}\index{i2c.h@{i2c.h}!I2C\_BUSY@{I2C\_BUSY}}}\mbox{\Hypertarget{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45a49e65f3960437d80b8328e7898cc90de}\label{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45a49e65f3960437d80b8328e7898cc90de}} 
+I2\+C\+\_\+\+BUSY&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{i2c_8h_a8ccbe0d3dceb6c6839e7bf224cfad689}\label{i2c_8h_a8ccbe0d3dceb6c6839e7bf224cfad689}} 
+\index{i2c.h@{i2c.h}!I2C\_Init@{I2C\_Init}}
+\index{I2C\_Init@{I2C\_Init}!i2c.h@{i2c.h}}
+\doxysubsubsection{\texorpdfstring{I2C\_Init()}{I2C\_Init()}}
+{\footnotesize\ttfamily void I2\+C\+\_\+\+Init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+This function initializes the I2\+C2 peripherial. 
+
+\mbox{\Hypertarget{i2c_8h_aeea95aa7e7cee73d66e75b9dd3b3e846}\label{i2c_8h_aeea95aa7e7cee73d66e75b9dd3b3e846}} 
+\index{i2c.h@{i2c.h}!I2C\_readByteStream@{I2C\_readByteStream}}
+\index{I2C\_readByteStream@{I2C\_readByteStream}!i2c.h@{i2c.h}}
+\doxysubsubsection{\texorpdfstring{I2C\_readByteStream()}{I2C\_readByteStream()}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45}{I2\+C\+\_\+\+Status}} I2\+C\+\_\+read\+Byte\+Stream (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{slave\+Addr,  }\item[{uint8\+\_\+t}]{mem\+Addr,  }\item[{uint8\+\_\+t $\ast$}]{p\+Data,  }\item[{uint8\+\_\+t}]{data\+Len }\end{DoxyParamCaption})}
+
+
+
+read byte stream from given slave memory location in polling mode. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em slave\+Addr} & -\/ slave address \\
+\hline
+{\em mem\+Addr} & -\/ memory address \\
+\hline
+{\em p\+Data} & -\/ address at which the received byte stream will be stored \\
+\hline
+{\em data\+Len} & -\/ length of byte stream \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em my\+I2C} & status \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{i2c_8h_ab1568726f3dc300efe03e5b3d9a2bbc4}\label{i2c_8h_ab1568726f3dc300efe03e5b3d9a2bbc4}} 
+\index{i2c.h@{i2c.h}!I2C\_writeByteStream@{I2C\_writeByteStream}}
+\index{I2C\_writeByteStream@{I2C\_writeByteStream}!i2c.h@{i2c.h}}
+\doxysubsubsection{\texorpdfstring{I2C\_writeByteStream()}{I2C\_writeByteStream()}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{i2c_8h_a83856d8d3bffc5ca50b8a296ae73cc45}{I2\+C\+\_\+\+Status}} I2\+C\+\_\+write\+Byte\+Stream (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{slave\+Addr,  }\item[{uint8\+\_\+t}]{mem\+Addr,  }\item[{uint8\+\_\+t $\ast$}]{p\+Data,  }\item[{uint8\+\_\+t}]{data\+Len }\end{DoxyParamCaption})}
+
+
+
+write a byte stream to given memory location of a slave in blocking mode 
+
+
+\begin{DoxyParams}{Parameters}
+{\em slave\+Adrr} & -\/ slave address \\
+\hline
+{\em mem\+Addr} & -\/ memory address \\
+\hline
+{\em p\+Data} & -\/ pointer to data to send \\
+\hline
+{\em data\+Len} & -\/ length of byte stream \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em I2\+C\+\_\+status} & \\
+\hline
+\end{DoxyRetVals}

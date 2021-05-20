@@ -1,0 +1,8 @@
+.settings/*
+Debug/*
+FreeRTOS/*
+system/*
+src/write.c
+ldscripts/*
+.cproject
+.project

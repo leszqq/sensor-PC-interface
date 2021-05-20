@@ -1,0 +1,234 @@
+\hypertarget{sensor_8h}{}\doxysection{sensor.\+h File Reference}
+\label{sensor_8h}\index{sensor.h@{sensor.h}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7}{sensor\+\_\+acc\+Range}} \{ \newline
+\mbox{\hyperlink{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7a11536a78bacaa30ba9bc4dcd59f44ab2}{SENSOR\+\_\+\+ACC\+\_\+\+RANGE\+\_\+2G}} = 0x0
+, \mbox{\hyperlink{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7abc8ff97cff65d046c3986c538fc5b534}{SENSOR\+\_\+\+ACC\+\_\+\+RANGE\+\_\+4G}} = 0x1
+, \mbox{\hyperlink{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7a3b63342f729ee08c77e4bdb864147328}{SENSOR\+\_\+\+ACC\+\_\+\+RANGE\+\_\+6G}} = 0x2
+, \mbox{\hyperlink{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7a04af13be6dd3fd6f7d5b1846cec313a2}{SENSOR\+\_\+\+ACC\+\_\+\+RANGE\+\_\+8G}} = 0x3
+, \newline
+\mbox{\hyperlink{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7aa1688290ec72d456c509e72e117a0e08}{SENSOR\+\_\+\+ACC\+\_\+\+RANGE\+\_\+16G}} = 0x4
+ \}
+\item 
+enum \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219}{sensor\+\_\+acc\+Rate}} \{ \newline
+\mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219abeae02bea216dcecde23f860aa94760b}{SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+3\+HZ125}} = 0x1
+, \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a71fa253585b9ceb91a702c7041d853de}{SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+6\+HZ25}} = 0x02
+, \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a4675346e8b8bbfb42acfc18b9dd95956}{SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+12\+HZ5}} = 0x03
+, \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219ab6c0c7cd1cbfcc9f00ce939e12f5691d}{SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+25\+HZ}} = 0x04
+, \newline
+\mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219af9d27bf43b5170e34cbab55083ac04b4}{SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+50\+HZ}} = 0x05
+, \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a9f12ff664cc30bba41b34e61ed344fc4}{SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+100\+HZ}} = 0x06
+, \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a5ee9d1be5b754414a70f4efabada8a33}{SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+200\+HZ}} = 0x07
+, \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a2e66391bc0d0d9a5db023c9df14ea22e}{SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+400\+HZ}} = 0x08
+, \newline
+\mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a64933a30f47ff9446b9dfec400b78ccd}{SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+800\+HZ}} = 0x09
+, \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a5099f95afad0fcd286d8b7929785e6d5}{SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+1600\+HZ}} = 0x0A
+ \}
+\item 
+enum \mbox{\hyperlink{sensor_8h_a5143b4b5626cd447d63be385c7487099}{sensor\+\_\+on\+\_\+off}} \{ \mbox{\hyperlink{sensor_8h_a5143b4b5626cd447d63be385c7487099aac132f2982b98bcaa3445e535a03ff75}{OFF}} = 0
+, \mbox{\hyperlink{sensor_8h_a5143b4b5626cd447d63be385c7487099a977d478dacaae531f95695750d1e9d03}{ON}} = 1
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{sensor_8h_a2c31ce691b244b33058002c8f191dd09}{sensor\+\_\+init}} ()
+\begin{DoxyCompactList}\small\item\em Initialize sensor to work in default mode. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sensor_8h_a26b8a3331ad9e0e8fc53c8e4da6a9a8a}{sensor\+\_\+process}} ()
+\item 
+void \mbox{\hyperlink{sensor_8h_ad027dfeb292bc5bd6e3fe9732b751f90}{sensor\+\_\+set\+Acc\+Range}} (enum \mbox{\hyperlink{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7}{sensor\+\_\+acc\+Range}} range)
+\begin{DoxyCompactList}\small\item\em set accelerometer range \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sensor_8h_a61686293280c60926e985259709f362a}{sensor\+\_\+set\+Acc\+Rate}} (enum \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219}{sensor\+\_\+acc\+Rate}} rate)
+\begin{DoxyCompactList}\small\item\em set accelerometer data read rate \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sensor_8h_ae5fa96986c4c3366be716d15c7ba608d}{sensor\+\_\+set\+Click\+Detection}} (enum \mbox{\hyperlink{sensor_8h_a5143b4b5626cd447d63be385c7487099}{sensor\+\_\+on\+\_\+off}})
+\begin{DoxyCompactList}\small\item\em enable click detection \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sensor_8h_a149045ddf25528551facbd855fc58820}{sensor\+\_\+set\+Fall\+Detection}} (enum \mbox{\hyperlink{sensor_8h_a5143b4b5626cd447d63be385c7487099}{sensor\+\_\+on\+\_\+off}})
+\begin{DoxyCompactList}\small\item\em enable free \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sensor_8h_a0379f41b3ee3ed6213b818fa0d6e6eab}{sensor\+\_\+get\+Acc}} (uint16\+\_\+t data\mbox{[}3\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7}\label{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7}} 
+\index{sensor.h@{sensor.h}!sensor\_accRange@{sensor\_accRange}}
+\index{sensor\_accRange@{sensor\_accRange}!sensor.h@{sensor.h}}
+\doxysubsubsection{\texorpdfstring{sensor\_accRange}{sensor\_accRange}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7}{sensor\+\_\+acc\+Range}}}
+
+Sensor accelerometer range. Param for \mbox{\hyperlink{sensor_8h_ad027dfeb292bc5bd6e3fe9732b751f90}{sensor\+\_\+set\+Acc\+Range()}}. \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RANGE\_2G@{SENSOR\_ACC\_RANGE\_2G}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RANGE\_2G@{SENSOR\_ACC\_RANGE\_2G}}}\mbox{\Hypertarget{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7a11536a78bacaa30ba9bc4dcd59f44ab2}\label{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7a11536a78bacaa30ba9bc4dcd59f44ab2}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RANGE\+\_\+2G&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RANGE\_4G@{SENSOR\_ACC\_RANGE\_4G}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RANGE\_4G@{SENSOR\_ACC\_RANGE\_4G}}}\mbox{\Hypertarget{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7abc8ff97cff65d046c3986c538fc5b534}\label{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7abc8ff97cff65d046c3986c538fc5b534}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RANGE\+\_\+4G&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RANGE\_6G@{SENSOR\_ACC\_RANGE\_6G}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RANGE\_6G@{SENSOR\_ACC\_RANGE\_6G}}}\mbox{\Hypertarget{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7a3b63342f729ee08c77e4bdb864147328}\label{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7a3b63342f729ee08c77e4bdb864147328}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RANGE\+\_\+6G&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RANGE\_8G@{SENSOR\_ACC\_RANGE\_8G}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RANGE\_8G@{SENSOR\_ACC\_RANGE\_8G}}}\mbox{\Hypertarget{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7a04af13be6dd3fd6f7d5b1846cec313a2}\label{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7a04af13be6dd3fd6f7d5b1846cec313a2}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RANGE\+\_\+8G&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RANGE\_16G@{SENSOR\_ACC\_RANGE\_16G}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RANGE\_16G@{SENSOR\_ACC\_RANGE\_16G}}}\mbox{\Hypertarget{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7aa1688290ec72d456c509e72e117a0e08}\label{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7aa1688290ec72d456c509e72e117a0e08}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RANGE\+\_\+16G&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{sensor_8h_a6ec25ac002aec2774aa849e701ec1219}\label{sensor_8h_a6ec25ac002aec2774aa849e701ec1219}} 
+\index{sensor.h@{sensor.h}!sensor\_accRate@{sensor\_accRate}}
+\index{sensor\_accRate@{sensor\_accRate}!sensor.h@{sensor.h}}
+\doxysubsubsection{\texorpdfstring{sensor\_accRate}{sensor\_accRate}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219}{sensor\+\_\+acc\+Rate}}}
+
+Sensor accelerometer data read rate. Param for sensor\+\_\+\+Set\+Acc\+Rate(). \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RATE\_3HZ125@{SENSOR\_ACC\_RATE\_3HZ125}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RATE\_3HZ125@{SENSOR\_ACC\_RATE\_3HZ125}}}\mbox{\Hypertarget{sensor_8h_a6ec25ac002aec2774aa849e701ec1219abeae02bea216dcecde23f860aa94760b}\label{sensor_8h_a6ec25ac002aec2774aa849e701ec1219abeae02bea216dcecde23f860aa94760b}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+3\+HZ125&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RATE\_6HZ25@{SENSOR\_ACC\_RATE\_6HZ25}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RATE\_6HZ25@{SENSOR\_ACC\_RATE\_6HZ25}}}\mbox{\Hypertarget{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a71fa253585b9ceb91a702c7041d853de}\label{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a71fa253585b9ceb91a702c7041d853de}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+6\+HZ25&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RATE\_12HZ5@{SENSOR\_ACC\_RATE\_12HZ5}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RATE\_12HZ5@{SENSOR\_ACC\_RATE\_12HZ5}}}\mbox{\Hypertarget{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a4675346e8b8bbfb42acfc18b9dd95956}\label{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a4675346e8b8bbfb42acfc18b9dd95956}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+12\+HZ5&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RATE\_25HZ@{SENSOR\_ACC\_RATE\_25HZ}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RATE\_25HZ@{SENSOR\_ACC\_RATE\_25HZ}}}\mbox{\Hypertarget{sensor_8h_a6ec25ac002aec2774aa849e701ec1219ab6c0c7cd1cbfcc9f00ce939e12f5691d}\label{sensor_8h_a6ec25ac002aec2774aa849e701ec1219ab6c0c7cd1cbfcc9f00ce939e12f5691d}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+25\+HZ&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RATE\_50HZ@{SENSOR\_ACC\_RATE\_50HZ}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RATE\_50HZ@{SENSOR\_ACC\_RATE\_50HZ}}}\mbox{\Hypertarget{sensor_8h_a6ec25ac002aec2774aa849e701ec1219af9d27bf43b5170e34cbab55083ac04b4}\label{sensor_8h_a6ec25ac002aec2774aa849e701ec1219af9d27bf43b5170e34cbab55083ac04b4}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+50\+HZ&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RATE\_100HZ@{SENSOR\_ACC\_RATE\_100HZ}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RATE\_100HZ@{SENSOR\_ACC\_RATE\_100HZ}}}\mbox{\Hypertarget{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a9f12ff664cc30bba41b34e61ed344fc4}\label{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a9f12ff664cc30bba41b34e61ed344fc4}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+100\+HZ&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RATE\_200HZ@{SENSOR\_ACC\_RATE\_200HZ}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RATE\_200HZ@{SENSOR\_ACC\_RATE\_200HZ}}}\mbox{\Hypertarget{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a5ee9d1be5b754414a70f4efabada8a33}\label{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a5ee9d1be5b754414a70f4efabada8a33}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+200\+HZ&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RATE\_400HZ@{SENSOR\_ACC\_RATE\_400HZ}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RATE\_400HZ@{SENSOR\_ACC\_RATE\_400HZ}}}\mbox{\Hypertarget{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a2e66391bc0d0d9a5db023c9df14ea22e}\label{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a2e66391bc0d0d9a5db023c9df14ea22e}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+400\+HZ&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RATE\_800HZ@{SENSOR\_ACC\_RATE\_800HZ}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RATE\_800HZ@{SENSOR\_ACC\_RATE\_800HZ}}}\mbox{\Hypertarget{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a64933a30f47ff9446b9dfec400b78ccd}\label{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a64933a30f47ff9446b9dfec400b78ccd}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+800\+HZ&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACC\_RATE\_1600HZ@{SENSOR\_ACC\_RATE\_1600HZ}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!SENSOR\_ACC\_RATE\_1600HZ@{SENSOR\_ACC\_RATE\_1600HZ}}}\mbox{\Hypertarget{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a5099f95afad0fcd286d8b7929785e6d5}\label{sensor_8h_a6ec25ac002aec2774aa849e701ec1219a5099f95afad0fcd286d8b7929785e6d5}} 
+SENSOR\+\_\+\+ACC\+\_\+\+RATE\+\_\+1600\+HZ&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{sensor_8h_a5143b4b5626cd447d63be385c7487099}\label{sensor_8h_a5143b4b5626cd447d63be385c7487099}} 
+\index{sensor.h@{sensor.h}!sensor\_on\_off@{sensor\_on\_off}}
+\index{sensor\_on\_off@{sensor\_on\_off}!sensor.h@{sensor.h}}
+\doxysubsubsection{\texorpdfstring{sensor\_on\_off}{sensor\_on\_off}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{sensor_8h_a5143b4b5626cd447d63be385c7487099}{sensor\+\_\+on\+\_\+off}}}
+
+Generic function param. \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{OFF@{OFF}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!OFF@{OFF}}}\mbox{\Hypertarget{sensor_8h_a5143b4b5626cd447d63be385c7487099aac132f2982b98bcaa3445e535a03ff75}\label{sensor_8h_a5143b4b5626cd447d63be385c7487099aac132f2982b98bcaa3445e535a03ff75}} 
+OFF&OFF \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ON@{ON}!sensor.h@{sensor.h}}\index{sensor.h@{sensor.h}!ON@{ON}}}\mbox{\Hypertarget{sensor_8h_a5143b4b5626cd447d63be385c7487099a977d478dacaae531f95695750d1e9d03}\label{sensor_8h_a5143b4b5626cd447d63be385c7487099a977d478dacaae531f95695750d1e9d03}} 
+ON&ON \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{sensor_8h_a0379f41b3ee3ed6213b818fa0d6e6eab}\label{sensor_8h_a0379f41b3ee3ed6213b818fa0d6e6eab}} 
+\index{sensor.h@{sensor.h}!sensor\_getAcc@{sensor\_getAcc}}
+\index{sensor\_getAcc@{sensor\_getAcc}!sensor.h@{sensor.h}}
+\doxysubsubsection{\texorpdfstring{sensor\_getAcc()}{sensor\_getAcc()}}
+{\footnotesize\ttfamily void sensor\+\_\+get\+Acc (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{data\mbox{[}3\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{sensor_8h_a2c31ce691b244b33058002c8f191dd09}\label{sensor_8h_a2c31ce691b244b33058002c8f191dd09}} 
+\index{sensor.h@{sensor.h}!sensor\_init@{sensor\_init}}
+\index{sensor\_init@{sensor\_init}!sensor.h@{sensor.h}}
+\doxysubsubsection{\texorpdfstring{sensor\_init()}{sensor\_init()}}
+{\footnotesize\ttfamily void sensor\+\_\+init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Initialize sensor to work in default mode. 
+
+\mbox{\Hypertarget{sensor_8h_a26b8a3331ad9e0e8fc53c8e4da6a9a8a}\label{sensor_8h_a26b8a3331ad9e0e8fc53c8e4da6a9a8a}} 
+\index{sensor.h@{sensor.h}!sensor\_process@{sensor\_process}}
+\index{sensor\_process@{sensor\_process}!sensor.h@{sensor.h}}
+\doxysubsubsection{\texorpdfstring{sensor\_process()}{sensor\_process()}}
+{\footnotesize\ttfamily void sensor\+\_\+process (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{sensor_8h_ad027dfeb292bc5bd6e3fe9732b751f90}\label{sensor_8h_ad027dfeb292bc5bd6e3fe9732b751f90}} 
+\index{sensor.h@{sensor.h}!sensor\_setAccRange@{sensor\_setAccRange}}
+\index{sensor\_setAccRange@{sensor\_setAccRange}!sensor.h@{sensor.h}}
+\doxysubsubsection{\texorpdfstring{sensor\_setAccRange()}{sensor\_setAccRange()}}
+{\footnotesize\ttfamily void sensor\+\_\+set\+Acc\+Range (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{sensor_8h_ac63f74e3fa01c8b7fe7ff0b91e1415d7}{sensor\+\_\+acc\+Range}}}]{range }\end{DoxyParamCaption})}
+
+
+
+set accelerometer range 
+
+sd 
+\begin{DoxyParams}{Parameters}
+{\em range} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{sensor_8h_a61686293280c60926e985259709f362a}\label{sensor_8h_a61686293280c60926e985259709f362a}} 
+\index{sensor.h@{sensor.h}!sensor\_setAccRate@{sensor\_setAccRate}}
+\index{sensor\_setAccRate@{sensor\_setAccRate}!sensor.h@{sensor.h}}
+\doxysubsubsection{\texorpdfstring{sensor\_setAccRate()}{sensor\_setAccRate()}}
+{\footnotesize\ttfamily void sensor\+\_\+set\+Acc\+Rate (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219}{sensor\+\_\+acc\+Rate}}}]{rate }\end{DoxyParamCaption})}
+
+
+
+set accelerometer data read rate 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rate} & data read rate of type \mbox{\hyperlink{sensor_8h_a6ec25ac002aec2774aa849e701ec1219}{sensor\+\_\+acc\+Rate}}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sensor_8h_ae5fa96986c4c3366be716d15c7ba608d}\label{sensor_8h_ae5fa96986c4c3366be716d15c7ba608d}} 
+\index{sensor.h@{sensor.h}!sensor\_setClickDetection@{sensor\_setClickDetection}}
+\index{sensor\_setClickDetection@{sensor\_setClickDetection}!sensor.h@{sensor.h}}
+\doxysubsubsection{\texorpdfstring{sensor\_setClickDetection()}{sensor\_setClickDetection()}}
+{\footnotesize\ttfamily void sensor\+\_\+set\+Click\+Detection (\begin{DoxyParamCaption}\item[{enum}]{sensor\+\_\+on\+\_\+off }\end{DoxyParamCaption})}
+
+
+
+enable click detection 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sensor\+\_\+on\+\_\+off} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{sensor_8h_a149045ddf25528551facbd855fc58820}\label{sensor_8h_a149045ddf25528551facbd855fc58820}} 
+\index{sensor.h@{sensor.h}!sensor\_setFallDetection@{sensor\_setFallDetection}}
+\index{sensor\_setFallDetection@{sensor\_setFallDetection}!sensor.h@{sensor.h}}
+\doxysubsubsection{\texorpdfstring{sensor\_setFallDetection()}{sensor\_setFallDetection()}}
+{\footnotesize\ttfamily void sensor\+\_\+set\+Fall\+Detection (\begin{DoxyParamCaption}\item[{enum}]{sensor\+\_\+on\+\_\+off }\end{DoxyParamCaption})}
+
+
+
+enable free 
+
+
+\begin{DoxyParams}{Parameters}
+{\em } & \\
+\hline
+\end{DoxyParams}
