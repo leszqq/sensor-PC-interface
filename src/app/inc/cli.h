@@ -30,13 +30,16 @@
  * @param rxQueue queue where receiveed commands are stored
  * @param huart uart handle
  */
-void CLI_init(QueueHandle_t txQueue, QueueHandle_t rxQueue, UART_HandleTypeDef* huart);
+void
+CLI_init (QueueHandle_t txQueue, QueueHandle_t rxQueue,
+          UART_HandleTypeDef *huart);
 
 /**
  * @brief CLI task
  * @param params unused
  */
-void CLI_task(void * params);
+void
+CLI_task (void *params);
 
 #ifndef APP_INC_UART_CLI_C_
 #define APP_INC_UART_CLI_C_

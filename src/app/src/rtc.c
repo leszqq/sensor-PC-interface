@@ -12,10 +12,10 @@ RTC_HandleTypeDef hrtc;
 /* === exported functions === */
 void RTC_init(void) {
 
-	__HAL_RCC_PWR_CLK_ENABLE();		// Enable power controller interface clock.
-	HAL_PWR_EnableBkUpAccess();					// Enable accces to RTC domain.
-	__HAL_RCC_RTC_CONFIG(RCC_RTCCLKSOURCE_LSE);		// Select RTC clock source.
-	__HAL_RCC_RTC_ENABLE();									// Enable RTC clock.
+	__HAL_RCC_PWR_CLK_ENABLE();                                                 // Enable power controller interface clock.
+	HAL_PWR_EnableBkUpAccess();                                                 // Enable accces to RTC domain.
+	__HAL_RCC_RTC_CONFIG(RCC_RTCCLKSOURCE_LSE);                                 // Select RTC clock source.
+	__HAL_RCC_RTC_ENABLE();                                                     // Enable RTC clock.
 
 	/* RTC parameters init.*/
 	hrtc.Instance = RTC;
