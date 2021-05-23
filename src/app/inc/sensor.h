@@ -16,13 +16,12 @@
 /* === exported types === */
 /** sensor output type indicator */
 enum sensor_OutputType {
-	SENSOR_OUT_ACC_DATA,
-	SENSOR_OUT_CLICK_DETECTION,
+	SENSOR_OUT_ACC_DATA, SENSOR_OUT_CLICK_DETECTION,
 };
 
 /** sensor data */
 struct sensor_XyzData {
-	int16_t x, y, z;															/// in mili g for accelerometer,
+	int16_t x, y, z;							/// in mili g for accelerometer,
 };
 
 /** sensor output data struct. Variables of this type are stored in sensor output queue */
@@ -58,7 +57,7 @@ enum sensor_AccAAFilterBW {
 	SENSOR_ACC_AAFILT_BW_773HZ = 0x0 << 6,/**< SENSOR_ACC_AAFILT_BW_773HZ */
 	SENSOR_ACC_AAFILT_BW_194HZ = 0x1 << 6,/**< SENSOR_ACC_AAFILT_BW_194HZ */
 	SENSOR_ACC_AAFILT_BW_362HZ = 0x2 << 6,/**< SENSOR_ACC_AAFILT_BW_362HZ */
-	SENSOR_ACC_AAFILT_BW_50HZ = 0x3 << 6  /**< SENSOR_ACC_AAFILT_BW_50HZ */
+	SENSOR_ACC_AAFILT_BW_50HZ = 0x3 << 6 /**< SENSOR_ACC_AAFILT_BW_50HZ */
 
 };
 
@@ -74,15 +73,12 @@ enum sensor_AccFullScale {
 	SENSOR_ACC_FULL_SCALE_16G = 0x4 << 3
 };
 
-
-
 /* === tasks === */
 /**
  * @brief This task is responsible for reading data from sensor and pushing it to queue.
  * @param params unused
  */
-void sensor_task(void * params);
-
+void sensor_task(void *params);
 
 /* === exported functions === */
 
@@ -102,7 +98,6 @@ void sensor_start();
  */
 void sensor_stop();
 
-
 /* accelerometer setters */
 /**
  * @brief Set accelerometer range.
@@ -111,7 +106,6 @@ void sensor_stop();
  */
 void sensor_setAccFullScale(enum sensor_AccFullScale fullScale);
 
-
 /**
  * @brief Set accelerometer data read rate
  * @param rate data read rate
@@ -119,13 +113,11 @@ void sensor_setAccFullScale(enum sensor_AccFullScale fullScale);
  */
 void sensor_setAccRate(enum sensor_AccRate rate);
 
-
 /**
  * @brief Set accelerometer anti alias filter bandwidth.
  * @param bandwidth
  */
 void sensor_setAccAAFiletrBW(enum sensor_AccAAFilterBW bandwidth);
-
 
 /* accelerometer getters */
 /**

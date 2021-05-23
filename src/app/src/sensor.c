@@ -140,8 +140,6 @@
 
 #define CLICK_THS					0x3A
 
-
-
 #define TIME_LIMIT					0x3B
 
 #define TIME_LATENCY				0x3C
@@ -152,8 +150,6 @@
 #define ACC_XYZ_DATA_SIZE           6
 #define CLICK_THS_VAL				0x02
 #define TIME_LIMIT_VAL				0x2F
-
-
 
 #define AUTO_ADDR_INC                   0x80
 
@@ -168,11 +164,11 @@
 
 /* === private functions === */
 /* Init gpio EXTI lines for sensor INT1 and INT2 lines */
-inline void initExtiLines(){
+inline void initExtiLines() {
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 
 	/* init GPIOs */
-	GPIO_InitTypeDef gpioInit = {0};
+	GPIO_InitTypeDef gpioInit = { 0 };
 	gpioInit.Pin = INT1_GPIO_PIN;
 	gpioInit.Mode = GPIO_MODE_IT_RISING;
 	gpioInit.Pull = GPIO_NOPULL;
@@ -189,62 +185,63 @@ inline void initExtiLines(){
 	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 }
 
-static void writeSensorRegisters(uint8_t startingReg, uint8_t* data, uint8_t numOfRegisters){
-	I2C_writeByteStream(SENSOR_ADDR, startingReg | AUTO_ADDR_INC, data, numOfRegisters);
+static void writeSensorRegisters(uint8_t startingReg, uint8_t *data,
+		uint8_t numOfRegisters) {
+	I2C_writeByteStream(SENSOR_ADDR, startingReg | AUTO_ADDR_INC, data,
+			numOfRegisters);
 }
 
-static void writeSensorRegister(uint8_t reg, uint8_t data){
+static void writeSensorRegister(uint8_t reg, uint8_t data) {
 	I2C_writeByteStream(SENSOR_ADDR, reg, &data, 1);
 }
 
-static void readSensorRegister(uint8_t reg, uint8_t* data){
+static void readSensorRegister(uint8_t reg, uint8_t *data) {
 	I2C_readByteStream(SENSOR_ADDR, reg, data, 1);
 }
 
-static void readSensorRegisters(uint8_t startingReg, uint8_t* data, uint8_t numOfRegisters){
-	I2C_readByteStream(SENSOR_ADDR, startingReg | AUTO_ADDR_INC, data, numOfRegisters);
+static void readSensorRegisters(uint8_t startingReg, uint8_t *data,
+		uint8_t numOfRegisters) {
+	I2C_readByteStream(SENSOR_ADDR, startingReg | AUTO_ADDR_INC, data,
+			numOfRegisters);
 }
 
 /* === private types === */
 
 enum State {
-	STATE_IDLE,
-	STATE_ACTIVE
+	STATE_IDLE, STATE_ACTIVE
 };
 
 enum EventNotification {
-	NEW_DATA,
-	NEW_DETECTION
+	NEW_DATA, NEW_DETECTION
 };
 
 struct Acc {
-	enum sensor_AccFullScale			fullScale;
-	enum sensor_AccRate					rate;
-	enum sensor_AccAAFilterBW			AAFilterBW;
+	enum sensor_AccFullScale fullScale;
+	enum sensor_AccRate rate;
+	enum sensor_AccAAFilterBW AAFilterBW;
 };
-
 
 /* === private variables === */
 static struct Base {
-	struct Acc							acc;						// accelerometer setup
-	enum State							state;						// sensor state
-	SemaphoreHandle_t					goActiveSemph;				// semaphore given by sensor_start() to make
-																	// sensor_task start reading data from sensor.
-	QueueHandle_t						sensorOutputQueue,			// public queue with sensor output.
-										evtQueue;					// private queue for handling sensor evt notifications.
-																	// Queue contain objects of type enum EventNotification
-    uint8_t 							auxTab[AUX_TAB_LEN];
+	struct Acc acc;						// accelerometer setup
+	enum State state;						// sensor state
+	SemaphoreHandle_t goActiveSemph;// semaphore given by sensor_start() to make
+									// sensor_task start reading data from sensor.
+	QueueHandle_t sensorOutputQueue,		// public queue with sensor output.
+			evtQueue;	// private queue for handling sensor evt notifications.
+						// Queue contain objects of type enum EventNotification
+	uint8_t auxTab[AUX_TAB_LEN];
 } base;
 
 /* === exported functions === */
-void sensor_init(QueueHandle_t sensorOutputQueue)
-{
+void sensor_init(QueueHandle_t sensorOutputQueue) {
 	/* init base struct */
 	base.state = STATE_IDLE;
 	base.sensorOutputQueue = sensorOutputQueue;
 
 	/* init RTOS objects */
-	base.evtQueue = xQueueCreate(EVT_NOTIFICATION_QUEUE_LEN, sizeof(enum EventNotification));
+	base.evtQueue = xQueueCreate(EVT_NOTIFICATION_QUEUE_LEN,
+			sizeof(enum EventNotification));
 	CHECK(base.evtQueue);
 
 	base.goActiveSemph = xSemaphoreCreateBinary();
@@ -255,68 +252,69 @@ void sensor_init(QueueHandle_t sensorOutputQueue)
 	/* init I2C */
 	I2C_init();
 
-    /* reboot sensor */
-    base.auxTab[0] = CTRL0_BOOT;
-    writeSensorRegister(CTRL0, base.auxTab[0]);
-    for(int i = 0; i < 8000; i++){};
+	/* reboot sensor */
+	base.auxTab[0] = CTRL0_BOOT;
+	writeSensorRegister(CTRL0, base.auxTab[0]);
+	for (int i = 0; i < 8000; i++) {
+	};
 
-    /* enable high pass filters for click detection and interrupt generators */
-    base.auxTab[0] = CTRL0_HP_CLICK;// | CTRL0_HPIS1 | CTRL0_HPIS2;
-    writeSensorRegister(CTRL0, base.auxTab[0]);
+	/* enable high pass filters for click detection and interrupt generators */
+	base.auxTab[0] = CTRL0_HP_CLICK;			// | CTRL0_HPIS1 | CTRL0_HPIS2;
+	writeSensorRegister(CTRL0, base.auxTab[0]);
 
-    /* enable int1 generation on new data available and int2 generation on click*/
-    base.auxTab[0] = CTRL3_INT1_DRDY_A;// | CTRL3_INT1_DRDY_M;
-    base.auxTab[1] = CTRL4_INT2_CLICK | CTRL4_INT2_IG1 | CTRL4_INT2_IG2;
-    writeSensorRegisters(CTRL3, base.auxTab, 2);
+	/* enable int1 generation on new data available and int2 generation on click*/
+	base.auxTab[0] = CTRL3_INT1_DRDY_A;					// | CTRL3_INT1_DRDY_M;
+	base.auxTab[1] = CTRL4_INT2_CLICK | CTRL4_INT2_IG1 | CTRL4_INT2_IG2;
+	writeSensorRegisters(CTRL3, base.auxTab, 2);
 
-    /* initial user setups */
-    sensor_setAccRate(SENSOR_ACC_RATE_400HZ);
-    sensor_setAccAAFiletrBW(SENSOR_ACC_AAFILT_BW_773HZ);
-    sensor_setAccFullScale(SENSOR_ACC_FULL_SCALE_2G);
+	/* initial user setups */
+	sensor_setAccRate(SENSOR_ACC_RATE_400HZ);
+	sensor_setAccAAFiletrBW(SENSOR_ACC_AAFILT_BW_773HZ);
+	sensor_setAccFullScale(SENSOR_ACC_FULL_SCALE_2G);
 
-    /* click detection setup */
-    writeSensorRegister(IG_CFG2, 0x10);
-    writeSensorRegister(IG_THS2, 0x0A);
-    writeSensorRegister(IG_DUR2, 0x02);
-    writeSensorRegister(CLICK_CFG, 0x10);
-    writeSensorRegister(CLICK_SRC, 0x30);
-    writeSensorRegister(CLICK_THS, 0x03);
-    writeSensorRegister(TIME_LIMIT, 0x0B);
-    writeSensorRegister(TIME_LATENCY, 0x0A);
-    writeSensorRegister(TIME_WINDOW, 0x0A);
-    writeSensorRegister(ACT_THS, 0x00);
-    writeSensorRegister(ACT_DUR, 0xF0);
+	/* click detection setup */
+	writeSensorRegister(IG_CFG2, 0x10);
+	writeSensorRegister(IG_THS2, 0x0A);
+	writeSensorRegister(IG_DUR2, 0x02);
+	writeSensorRegister(CLICK_CFG, 0x10);
+	writeSensorRegister(CLICK_SRC, 0x30);
+	writeSensorRegister(CLICK_THS, 0x03);
+	writeSensorRegister(TIME_LIMIT, 0x0B);
+	writeSensorRegister(TIME_LATENCY, 0x0A);
+	writeSensorRegister(TIME_WINDOW, 0x0A);
+	writeSensorRegister(ACT_THS, 0x00);
+	writeSensorRegister(ACT_DUR, 0xF0);
 }
 
-void sensor_start(){
+void sensor_start() {
 	xSemaphoreGive(base.goActiveSemph);
 }
 
-void sensor_stop(){
+void sensor_stop() {
 	base.state = STATE_IDLE;
 }
 
-void sensor_setAccFullScale(enum sensor_AccFullScale fullScale){
+void sensor_setAccFullScale(enum sensor_AccFullScale fullScale) {
 	base.acc.fullScale = fullScale;
 	writeSensorRegister(CTRL2, fullScale | base.acc.AAFilterBW);
 }
 
-void sensor_setAccRate(enum sensor_AccRate rate){
+void sensor_setAccRate(enum sensor_AccRate rate) {
 	base.acc.rate = rate;
-	writeSensorRegister(CTRL1, rate | CTRL1_AZEN | CTRL1_AYEN | CTRL1_AXEN);	// all axis data read enabled by default.
+	writeSensorRegister(CTRL1, rate | CTRL1_AZEN | CTRL1_AYEN | CTRL1_AXEN);// all axis data read enabled by default.
 }
 
-void sensor_setAccAAFiletrBW(enum sensor_AccAAFilterBW bandwidth){
+void sensor_setAccAAFiletrBW(enum sensor_AccAAFilterBW bandwidth) {
 	base.acc.AAFilterBW = bandwidth;
 	writeSensorRegister(CTRL2, bandwidth | base.acc.fullScale);
 }
 
-enum sensor_AccFullScale sensor_getAccFullScale(){
+enum sensor_AccFullScale sensor_getAccFullScale() {
 	return base.acc.fullScale;
 }
 
-uint8_t sensor_getAccFullScaleInt(){
-	switch(base.acc.fullScale){
+uint8_t sensor_getAccFullScaleInt() {
+	switch (base.acc.fullScale) {
 	case SENSOR_ACC_FULL_SCALE_2G:
 		return 2;
 		break;
@@ -336,12 +334,12 @@ uint8_t sensor_getAccFullScaleInt(){
 	}
 }
 
-enum sensor_AccRate sensor_getAccRate(){
+enum sensor_AccRate sensor_getAccRate() {
 	return base.acc.rate;
 }
 
-uint32_t sensor_getAccRateInt(){
-	switch(base.acc.rate){
+uint32_t sensor_getAccRateInt() {
+	switch (base.acc.rate) {
 	case SENSOR_ACC_RATE_3HZ125:
 		return 3125;
 		break;
@@ -376,13 +374,13 @@ uint32_t sensor_getAccRateInt(){
 	}
 }
 
-void sensor_task(void * params){
+void sensor_task(void *params) {
 	UNUSED(params);
 
 	enum EventNotification evtNotification;
 	struct sensor_Output output;
-	while(1){
-		switch(base.state){
+	while (1) {
+		switch (base.state) {
 		case STATE_IDLE:
 			/* block until active state requested by sensor_start() function. */
 			xSemaphoreTake(base.goActiveSemph, portMAX_DELAY);
@@ -395,34 +393,42 @@ void sensor_task(void * params){
 			/* Block in waiting for new data or event detection interrupt*/
 			xQueueReceive(base.evtQueue, &evtNotification, portMAX_DELAY);
 			/* Check if new data is available or event occured */
-			switch(evtNotification){
+			switch (evtNotification) {
 			case NEW_DATA:
 				/* specify new data type, read it and put into sensor output queue */
 				readSensorRegister(STATUS_A, base.auxTab);
 
 				/* if accelerometer data ready */
-				if(base.auxTab[0] && STATUS_A_ZYXADA){
+				if (base.auxTab[0] && STATUS_A_ZYXADA) {
 
 					output.type = SENSOR_OUT_ACC_DATA;
 					/* read and decode accelerometer data */
 					readSensorRegisters(OUT_X_L_A, base.auxTab, 6);
-					output.xyzData.x = ( ( base.auxTab[0] | ( base.auxTab[1] << 8)));
-					output.xyzData.x = ( (double) (output.xyzData.x) / INT16_MAX ) * 1000.0 * sensor_getAccFullScaleInt();
-					output.xyzData.y = ( ( base.auxTab[2] | ( base.auxTab[3] << 8 )) );
-					output.xyzData.y = ( (double) (output.xyzData.y) / INT16_MAX ) * 1000.0 * sensor_getAccFullScaleInt();
-					output.xyzData.z = ( ( base.auxTab[4] | ( base.auxTab[5] << 8 )) );
-					output.xyzData.z = ( (double) (output.xyzData.z) / INT16_MAX ) * 1000.0 * sensor_getAccFullScaleInt();
+					output.xyzData.x =
+							((base.auxTab[0] | (base.auxTab[1] << 8)));
+					output.xyzData.x = ((double) (output.xyzData.x) / INT16_MAX)
+							* 1000.0 * sensor_getAccFullScaleInt();
+					output.xyzData.y =
+							((base.auxTab[2] | (base.auxTab[3] << 8)));
+					output.xyzData.y = ((double) (output.xyzData.y) / INT16_MAX)
+							* 1000.0 * sensor_getAccFullScaleInt();
+					output.xyzData.z =
+							((base.auxTab[4] | (base.auxTab[5] << 8)));
+					output.xyzData.z = ((double) (output.xyzData.z) / INT16_MAX)
+							* 1000.0 * sensor_getAccFullScaleInt();
 
-					xQueueSendToBack(base.sensorOutputQueue, &output, portMAX_DELAY);
+					xQueueSendToBack(base.sensorOutputQueue, &output,
+							portMAX_DELAY);
 				}
 				/* Add magnetometer and temperature read here in future */
 				break;
 			case NEW_DETECTION:
 				/* specify new detection type and put it into sensor output queue*/
 				readSensorRegister(CLICK_SRC, base.auxTab);
-				if(base.auxTab[0] & CLICK_SRC_Z){
+				if (base.auxTab[0] & CLICK_SRC_Z) {
 					output.type = SENSOR_OUT_CLICK_DETECTION;
-					xQueueSendToBack(base.sensorOutputQueue, &output, portMAX_DELAY);
+					xQueueSendToBack(base.sensorOutputQueue, &output,
+							portMAX_DELAY);
 				}
 				break;
 			}
@@ -432,27 +438,23 @@ void sensor_task(void * params){
 }
 
 /* Interrupts on sensor data ready or event detection signals */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	BaseType_t higherPriorityTaskWoken = pdFALSE;
 	enum EventNotification notificationToSend;
-	if(GPIO_Pin == INT1_GPIO_PIN){
+	if (GPIO_Pin == INT1_GPIO_PIN) {
 		notificationToSend = NEW_DATA;
-	} else if(GPIO_Pin == INT2_GPIO_PIN){
+	} else if (GPIO_Pin == INT2_GPIO_PIN) {
 		notificationToSend = NEW_DETECTION;
 	}
-	xQueueSendFromISR(base.evtQueue, &notificationToSend, &higherPriorityTaskWoken);
+	xQueueSendFromISR(base.evtQueue, &notificationToSend,
+			&higherPriorityTaskWoken);
 	portEND_SWITCHING_ISR(higherPriorityTaskWoken);
 }
 
-
-void EXTI0_IRQHandler(void)
-{
-  HAL_GPIO_EXTI_IRQHandler(INT1_GPIO_PIN);
+void EXTI0_IRQHandler(void) {
+	HAL_GPIO_EXTI_IRQHandler(INT1_GPIO_PIN);
 }
 
-
-void EXTI1_IRQHandler(void)
-{
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
+void EXTI1_IRQHandler(void) {
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
 }
