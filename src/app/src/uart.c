@@ -2,7 +2,7 @@
  * uart.c
  *
  *  Created on: 1 May 2021
- *      Author: Administrator
+ *      Author: Wiktor Lechowicz
  */
 #include "uart.h"
 #include "main.h"
@@ -19,7 +19,8 @@ void UART_Init(UART_HandleTypeDef* huart){
 	HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
 	/* configure uart2 */
 	huart->Instance = USART2;
-	huart->Init.BaudRate = 115200;
+	huart->Init.Mode =
+	huart->Init.BaudRate = 460800;
 	huart->Init.WordLength = UART_WORDLENGTH_8B;
 	huart->Init.StopBits = UART_STOPBITS_1;
 	huart->Init.Parity = UART_PARITY_NONE;

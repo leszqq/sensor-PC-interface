@@ -21,14 +21,21 @@
 
 /* === exported defines === */
 #define CLI_MAX_LINE_LEN	50
-
-
-/* === exported variables === */
-/* === exported variables === */
+#define CLI_ENTER    		13
 
 /* === exported functions === */
+/**
+ * @brief initialise CLI
+ * @param txQueue queue in which data to be transmitted should be inserted
+ * @param rxQueue queue where receiveed commands are stored
+ * @param huart uart handle
+ */
 void CLI_init(QueueHandle_t txQueue, QueueHandle_t rxQueue, UART_HandleTypeDef* huart);
 
+/**
+ * @brief CLI task
+ * @param params unused
+ */
 void CLI_task(void * params);
 
 #ifndef APP_INC_UART_CLI_C_

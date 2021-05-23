@@ -13,6 +13,8 @@ extern RTC_HandleTypeDef hrtc;
 
 
 /* === exported functions === */
+
+/** Real Time Clock initialisation function */
 void RTC_init(void);
 
 

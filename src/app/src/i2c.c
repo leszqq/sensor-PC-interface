@@ -1,22 +1,16 @@
 /*
  * myI2C.c
  *
- *  Created on: Jan 8, 2021
+ *  Created on: May 8, 2021
  *      Author: Wiktor Lechowicz
  */
 
 #define I2Cx				I2C2												// used I2C
 #include "I2C.h"
-#include "stm32f302x8.h"														// device regissters
+#include "stm32f302x8.h"														// device registers
 
-#define TIMINGR_CONTENT		0x00901E23											// calculation based on reference manual
+#define TIMINGR_CONTENT		0x10E8122C											// calculation based on reference manual
 
-//static struct Base {
-//	uint8_t *txData;															// pointer to next byte to send
-//	uint8_t txCount;															// number of bytes to send
-//	uint8_t *rxData;															// pointer to memory address to store next received byte
-//	uint8_t rxCount;															// number of bytes to receive
-//}base;
 void I2C_init()
 {
     /* GPIOA CLK enable */
@@ -49,12 +43,14 @@ enum I2C_Status I2C_writeByteStream(uint8_t slaveAddr, uint8_t memAddr, uint8_t 
 
 	while(I2Cx->ISR & I2C_ISR_BUSY){											// wait for I2Cx bus not busy
 	}
-
+	taskENTER_CRITICAL();
 	I2Cx->CR2 &= ~I2C_CR2_ADD10;												// select 7-bit addressing mode
 	I2Cx->CR2 = I2C_CR2_SADD & slaveAddr;										// set slave address
 	I2Cx->CR2 &= ~I2C_CR2_RD_WRN;												// set write mode
 
+	I2Cx->CR2 &= ~I2C_CR2_NBYTES_Msk;
 	I2Cx->CR2 |= (dataLen + 1) << I2C_CR2_NBYTES_Pos;
+
 
 	I2Cx->CR2 |= I2C_CR2_AUTOEND;												// STOP will be generated after NBYTES send;\	// write data to TXDR
 	I2Cx->TXDR = memAddr;
@@ -67,21 +63,24 @@ enum I2C_Status I2C_writeByteStream(uint8_t slaveAddr, uint8_t memAddr, uint8_t 
 		}
 		I2Cx->TXDR = pData[i];
 	}
+	taskEXIT_CRITICAL();
 	return I2C_SUCCES;
 }
 
 enum I2C_Status I2C_readByteStream(uint8_t slaveAddr, uint8_t memAddr, uint8_t * pData, uint8_t dataLen){
 	assert_param(I2Cx);
 	assert_param(pData);
-
+	taskENTER_CRITICAL();
 	/* set device memory address to read from. */
 	I2C_writeByteStream(slaveAddr, memAddr, pData, 0);
 
 	while(I2Cx->ISR & I2C_ISR_BUSY){											// wait for I2Cx bus not busy
 	}
 	/* read */
-	I2Cx->CR2 |= I2C_CR2_RD_WRN;												// set read mode
+	I2Cx->CR2 |= I2C_CR2_RD_WRN;
+	I2Cx->CR2 &= ~I2C_CR2_NBYTES_Msk;
 	I2Cx->CR2 |= (dataLen) << I2C_CR2_NBYTES_Pos;								// set number of bytes to read
+	I2Cx->CR2 |= I2C_CR2_AUTOEND;
 	I2Cx->CR2 |= I2C_CR2_START;
 
 	for(uint8_t i = 0; i < dataLen; i++){
@@ -90,6 +89,7 @@ enum I2C_Status I2C_readByteStream(uint8_t slaveAddr, uint8_t memAddr, uint8_t *
 		}
 		pData[i] = I2Cx->RXDR;
 	}
+	taskEXIT_CRITICAL();
 
 	return I2C_SUCCES;
 }

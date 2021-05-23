@@ -1,15 +1,11 @@
 /*
  * myI2C.h
  *
- *  Created on: Jan 8, 2021
+ *  Created on: May 1, 2021
  *      Author: Wiktor Lechowicz
  *      Description:
  *      This file contains functions for initialization and handling of I2C peripherial for stm32f3xx devices.
  *      Desired initialization values have been hardcoded in myI2C_Init function.
- *
- *      Connections:
- *      PA10 -> I2C2_SDA
- *      PA9 ->I2C2_SCL
  */
 #ifndef INC_MYI2C_H_
 #define INC_MYI2C_H_
@@ -18,12 +14,13 @@
 #include "stm32f302x8.h"
 
 
-// error codes for detecting transmission failure(NACK, arbitration lost or bus error)
+/** error codes for detecting transmission failure(NACK, arbitration lost or bus error) */
 enum I2C_Status {
 	I2C_FAILURE	= 0x00,
 	I2C_SUCCES	= 0x01,
 	I2C_BUSY	= 0x02
 };
+
 #define myI2C_SUCCESS    0x01
 #define myI2C_FAILURE    0x00
 /**

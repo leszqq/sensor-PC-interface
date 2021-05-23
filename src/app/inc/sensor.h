@@ -8,28 +8,31 @@
 #include <stdint.h>
 #include "FreeRTOS.h"
 #include "semphr.h"
+#include <stdbool.h>
 
 #ifndef APP_INC_SENSOR_H_
 #define APP_INC_SENSOR_H_
 
-/* === exported defines === */
-
 /* === exported types === */
+/** sensor output type indicator */
 enum sensor_OutputType {
 	SENSOR_OUT_ACC_DATA,
 	SENSOR_OUT_CLICK_DETECTION,
-	SENSOR_OUT_FALL_DETECTION
 };
 
+/** sensor data */
 struct sensor_XyzData {
-	int16_t x, y, z;
+	int16_t x, y, z;															/// in mili g for accelerometer,
 };
+
+/** sensor output data struct. Variables of this type are stored in sensor output queue */
 struct sensor_Output {
 	enum sensor_OutputType type;
 	union {
 		struct sensor_XyzData xyzData;
 	};
 };
+
 /**
  * Sensor accelerometer data read rate. Parameter for @ref sensor_setAccRate().
  * Assigned values are compliant with accelerometer CTRL1 register content.
@@ -82,6 +85,7 @@ void sensor_task(void * params);
 
 
 /* === exported functions === */
+
 /**
  * @brief Initialise sensor to work in default mode and create tasks.d
  * @param sensorOutputQueue uninitialised freeRTOS queue which will contain accelerometer output data.
@@ -98,9 +102,6 @@ void sensor_start();
  */
 void sensor_stop();
 
-
-// TODO: temp dla testów
-void sensor_process();
 
 /* accelerometer setters */
 /**
@@ -121,13 +122,12 @@ void sensor_setAccRate(enum sensor_AccRate rate);
 
 /**
  * @brief Set accelerometer anti alias filter bandwidth.
- * @param bandwith
+ * @param bandwidth
  */
 void sensor_setAccAAFiletrBW(enum sensor_AccAAFilterBW bandwidth);
 
-/* accelerometer getters */
-void sensor_getAcc(uint16_t data[3]); // TODO
 
+/* accelerometer getters */
 /**
  * @brief Get accelerometer range.
  * @return accelerometer range
@@ -135,10 +135,22 @@ void sensor_getAcc(uint16_t data[3]); // TODO
 enum sensor_AccFullScale sensor_getAccFullScale();
 
 /**
+ * @brief Get accelerometer range as integer.
+ * @return accelerometer range as integer.
+ */
+uint8_t sensor_getAccFullScaleInt();
+
+/**
  * @brief Get accelerometer data read rate.
  * @return accelerometer data read rate
  */
 enum sensor_AccRate sensor_getAccRate();
+
+/**
+ * @brief Get accelerometer data read rate as integer in miliHertz.
+ * @return accelerometer data read rate as integer
+ */
+uint32_t sensor_getAccRateInt();
 
 /**
  * @brief Get numbers of samples averaged for accelerometer data readings.

@@ -26,6 +26,9 @@ void RTC_init(void){
 	if(HAL_OK != HAL_RTC_Init(&hrtc)){
 		errorHandler();
 	};
+
+	RTC_TimeTypeDef rtcTime = {0};
+	HAL_RTC_SetTime(&hrtc, &rtcTime, RTC_FORMAT_BIN);
 }
 
 

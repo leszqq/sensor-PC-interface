@@ -10,7 +10,7 @@
 
 #include "stm32f3xx_hal.h"
 
-
+/** UART initialisation function */
 void UART_Init(UART_HandleTypeDef* huart);
 
 

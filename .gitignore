@@ -6,3 +6,4 @@ src/write.c
 ldscripts/*
 .cproject
 .project
+documentation/

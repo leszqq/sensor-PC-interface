@@ -6,7 +6,7 @@
  *      Author: Wiktor Lechowicz
  */
 #define BACKSPACE 127
-#define ENTER     13
+
 #define DELETE    0x7F
 
 /* private includes */
@@ -27,15 +27,11 @@
                             xQueueSend(base.txQueue, base.transmitBuff, portMAX_DELAY); \
                          }while(0)
 
-//#include "main.h"
 
-/* private defines */
+/* === private defines === */
 #define RECEIVED_BUFF_LEN                   30
 
-
-
 /* === private variables === */
-
 static struct cli {
     UART_HandleTypeDef              *huart;
     QueueHandle_t					txQueue;
@@ -45,7 +41,6 @@ static struct cli {
     uint8_t                         receivedIndex;
 } base;
 
-/* === static functions === */
 /* === exported functions === */
 void CLI_init(QueueHandle_t txQueue, QueueHandle_t rxQueue, UART_HandleTypeDef* huart)
 {
@@ -60,11 +55,6 @@ void CLI_init(QueueHandle_t txQueue, QueueHandle_t rxQueue, UART_HandleTypeDef* 
     base.txQueue = txQueue;
     base.rxQueue = rxQueue;
     base.receivedIndex = 0;
-
-	/* put welcome message in transmitter queue */
-	//xQueueSend(base.txQueue, "Type in HELP for command list\n\r>>", 0);
-    //PRINT("Type in HELP for command list\n\r>>");
-	PRINT("Type in dupa %d", 3);
 
 	/* Start character receiving using IT. */
     HAL_UART_Receive_IT(base.huart, (uint8_t *)&base.receivedBuff[0], 1);
@@ -97,7 +87,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
         		base.receivedIndex--;
         	}
         	/* If ENTER key press, send buffer to controller to decode*/
-		}else if(base.receivedBuff[base.receivedIndex] == ENTER){
+		}else if(base.receivedBuff[base.receivedIndex] == CLI_ENTER){
 			xQueueSendToBackFromISR(base.txQueue, "\n\r", &higherPriorityTaskWoken);
 			base.receivedBuff[base.receivedIndex] = '\0';
 			xQueueSendToBackFromISR(base.rxQueue, base.receivedBuff, &higherPriorityTaskWoken);

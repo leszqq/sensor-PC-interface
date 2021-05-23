@@ -2,7 +2,7 @@
  * sensor.c
  *
  *  Created on: May 4, 2021
- *      Author: Administrator
+ *      Author: Wiktor Lechowicz
  */
 #include "sensor.h"
 #include "stm32f3xx_hal.h"
@@ -15,7 +15,7 @@
 
 #define SENSOR_ADDR                     0x3A
 
-/* registers */
+/* registers and register bit patterns */
 
 #define STATUS_M                    0x07
 #define OUT_X_L_M                   0x08
@@ -117,7 +117,42 @@
 #define OUT_Z_L_A                   0x2C
 #define OUT_Z_H_A                   0x2D
 
+#define IG_CFG1						0x30
+#define		IG_CFG1_EN_ALL				0x3F
+#define IG_SRC1
+#define IG_THS1				0x32
+#define IG_DUR1						0x33
+#define IG_CFG2						0x34
+#define IG_CFG2_EN_ALL					0x3F
+
+#define IG_SRC2						0x35
+#define IG_THS2						0x36
+#define	IG_DUR2						0x37
+
+#define CLICK_CFG					0x38
+#define 	CLICK_CFG_ENABLE_DBL_CLICK	0x2A
+#define 	CLICK_CFG_ENABLE_SGL_CLICK	0x15
+
+#define CLICK_SRC					0x39
+#define 	CLICK_SRC_DBL_CLICK_ENABLE	0x20
+#define 	CLICK_SRC_SGL_CLICK_ENABLE	0x10
+#define		CLICK_SRC_Z					0x04
+
+#define CLICK_THS					0x3A
+
+
+
+#define TIME_LIMIT					0x3B
+
+#define TIME_LATENCY				0x3C
+#define TIME_WINDOW					0x3D
+#define ACT_THS						0x3E
+#define ACT_DUR						0x3F
+
 #define ACC_XYZ_DATA_SIZE           6
+#define CLICK_THS_VAL				0x02
+#define TIME_LIMIT_VAL				0x2F
+
 
 
 #define AUTO_ADDR_INC                   0x80
@@ -129,6 +164,7 @@
 
 #define EVT_NOTIFICATION_QUEUE_LEN		3
 #define AUX_TAB_LEN						10
+#define MAX_INT16_VAL					32767
 
 /* === private functions === */
 /* Init gpio EXTI lines for sensor INT1 and INT2 lines */
@@ -142,34 +178,34 @@ inline void initExtiLines(){
 	gpioInit.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(INT1_GPIO_PORT, &gpioInit);
 	gpioInit.Pin = INT2_GPIO_PIN;
+	gpioInit.Mode = GPIO_MODE_IT_FALLING;
 	HAL_GPIO_Init(INT2_GPIO_PORT, &gpioInit);
+
 	/* init EXTI */
 	HAL_NVIC_SetPriority(EXTI0_IRQn, 10, 10);
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
-	HAL_NVIC_SetPriority(EXTI1_IRQn, 10, 10);
+	HAL_NVIC_SetPriority(EXTI1_IRQn, 8, 8);
 	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 }
-inline void writeSensorRegisters(uint8_t startingReg, uint8_t* data, uint8_t numOfRegisters){
+
+static void writeSensorRegisters(uint8_t startingReg, uint8_t* data, uint8_t numOfRegisters){
 	I2C_writeByteStream(SENSOR_ADDR, startingReg | AUTO_ADDR_INC, data, numOfRegisters);
 }
 
-inline void writeSensorRegister(uint8_t reg, uint8_t data){
+static void writeSensorRegister(uint8_t reg, uint8_t data){
 	I2C_writeByteStream(SENSOR_ADDR, reg, &data, 1);
 }
 
-void readSensorRegister(uint8_t reg, uint8_t* data){
+static void readSensorRegister(uint8_t reg, uint8_t* data){
 	I2C_readByteStream(SENSOR_ADDR, reg, data, 1);
 }
 
-void readSensorRegisters(uint8_t startingReg, uint8_t* data, uint8_t numOfRegisters){
+static void readSensorRegisters(uint8_t startingReg, uint8_t* data, uint8_t numOfRegisters){
 	I2C_readByteStream(SENSOR_ADDR, startingReg | AUTO_ADDR_INC, data, numOfRegisters);
 }
 
-/* === private types and variables === */
-//struct xyzData {
-//    int16_t x,y,z;
-//};
+/* === private types === */
 
 enum State {
 	STATE_IDLE,
@@ -187,6 +223,8 @@ struct Acc {
 	enum sensor_AccAAFilterBW			AAFilterBW;
 };
 
+
+/* === private variables === */
 static struct Base {
 	struct Acc							acc;						// accelerometer setup
 	enum State							state;						// sensor state
@@ -217,62 +255,40 @@ void sensor_init(QueueHandle_t sensorOutputQueue)
 	/* init I2C */
 	I2C_init();
 
-
     /* reboot sensor */
     base.auxTab[0] = CTRL0_BOOT;
-    //HAL_I2C_Mem_Write(&hi2c2, SENSOR_ADDR, CTRL0, 1, base.aux_tab, 1, 100);
     writeSensorRegister(CTRL0, base.auxTab[0]);
     for(int i = 0; i < 8000; i++){};
+
     /* enable high pass filters for click detection and interrupt generators */
-    base.auxTab[0] = CTRL0_HP_CLICK | CTRL0_HPIS1 | CTRL0_HPIS2;
+    base.auxTab[0] = CTRL0_HP_CLICK;// | CTRL0_HPIS1 | CTRL0_HPIS2;
     writeSensorRegister(CTRL0, base.auxTab[0]);
 
-    /* enable int1 generation on new data available and int2 generation on free fall or click*/
-    base.auxTab[0] = CTRL3_INT1_DRDY_A | CTRL3_INT1_DRDY_M;
+    /* enable int1 generation on new data available and int2 generation on click*/
+    base.auxTab[0] = CTRL3_INT1_DRDY_A;// | CTRL3_INT1_DRDY_M;
     base.auxTab[1] = CTRL4_INT2_CLICK | CTRL4_INT2_IG1 | CTRL4_INT2_IG2;
     writeSensorRegisters(CTRL3, base.auxTab, 2);
 
     /* initial user setups */
-    sensor_setAccRate(SENSOR_ACC_RATE_3HZ125);
-    sensor_setAccAAFiletrBW(SENSOR_ACC_AAFILT_BW_50HZ);
-    sensor_setAccFullScale(SENSOR_ACC_FULL_SCALE_8G);
+    sensor_setAccRate(SENSOR_ACC_RATE_400HZ);
+    sensor_setAccAAFiletrBW(SENSOR_ACC_AAFILT_BW_773HZ);
+    sensor_setAccFullScale(SENSOR_ACC_FULL_SCALE_2G);
 
-
-
-    /* disable FIFO, enable HP filters for click detection and interrupt generators */
-
-    /* set read data rate,
-//    // test
-//    //HAL_I2C_Mem_Read(&hi2c2, SENSOR_ADDR, CTRL0, 1, base.aux_tab, 1, HAL_MAX_DELAY);
-//
-//    /* Disable FIFO, enable HP filters for click detection and interrupt generators */
-//    base.auxTab[0] = CTRL0_HP_CLICK | CTRL0_HPIS1 | CTRL0_HPIS2;
-//    /* accelerometer data rate 25Hz, enable X, Y and Z axis measurement */
-//    base.acc.rate = SENSOR_ACC_RATE_25HZ;
-//    base.auxTab[1] = CTRL1_ACC_RATE_25HZ | CTRL1_AZEN | CTRL1_AYEN | CTRL1_AXEN;
-//    /* accelerometer anti alias filter bandwith 50Hz, full scale +/- 4g, self test disabled */
-//    base.range = SENSOR_ACC_RANGE_4G;
-//    base.auxTab[2] = CTRL2_ANTI_ALIAS_50HZ | CTRL2_FULL_SCALE_4G;
-//    /* acc data ready interrupt on INT1 // TODO TEMP?*/
-
-    /* interrupt generation, temperature and magnetic sensor */
-//    base.aux_tab[3] = CTRL3_INT1_DRDY_A;
-//    /* magnetometer data ready interrupt on int2 // TODO TEMP?    */
-//    base.aux_tab[4] = CTRL4_INT2_DRDY_M;
-//    /* temperature sensor enable, 25Hz rate, high magnetic resolution, latch int req disabled */
-//    base.aux_tab[5] = CTRL5_TEMP_EN | CTRL5_M_RATE_25HZ | CTRL5_M_RES_HIGH;
-//    /* Magnetic full scale +/- 4 gauss     */
-//    base.aux_tab[6] = CTRL6_M_FS_4GAUSSS;
-//    /* magnetic sensor continuous conversion mode */
-//    base.aux_tab[7] = CTRL7_M_CONT_CONV;
-
-    //writeSensorRegisters(CTRL0, base.auxTab, 8);
-    //I2C_writeByteStream(SENSOR_ADDR, CTRL0 | AUTO_ADDR_INC, base.auxTab, 7);
-    //HAL_I2C_Mem_Read(&hi2c2, SENSOR_ADDR, CTRL0 | AUTO_ADDR_INC, 1, base.aux_tab, 7, HAL_MAX_DELAY);
+    /* click detection setup */
+    writeSensorRegister(IG_CFG2, 0x10);
+    writeSensorRegister(IG_THS2, 0x0A);
+    writeSensorRegister(IG_DUR2, 0x02);
+    writeSensorRegister(CLICK_CFG, 0x10);
+    writeSensorRegister(CLICK_SRC, 0x30);
+    writeSensorRegister(CLICK_THS, 0x03);
+    writeSensorRegister(TIME_LIMIT, 0x0B);
+    writeSensorRegister(TIME_LATENCY, 0x0A);
+    writeSensorRegister(TIME_WINDOW, 0x0A);
+    writeSensorRegister(ACT_THS, 0x00);
+    writeSensorRegister(ACT_DUR, 0xF0);
 }
 
 void sensor_start(){
-	base.state = STATE_ACTIVE;
 	xSemaphoreGive(base.goActiveSemph);
 }
 
@@ -295,73 +311,119 @@ void sensor_setAccAAFiletrBW(enum sensor_AccAAFilterBW bandwidth){
 	writeSensorRegister(CTRL2, bandwidth | base.acc.fullScale);
 }
 
-
-
 enum sensor_AccFullScale sensor_getAccFullScale(){
 	return base.acc.fullScale;
+}
+
+uint8_t sensor_getAccFullScaleInt(){
+	switch(base.acc.fullScale){
+	case SENSOR_ACC_FULL_SCALE_2G:
+		return 2;
+		break;
+	case SENSOR_ACC_FULL_SCALE_4G:
+		return 4;
+		break;
+	case SENSOR_ACC_FULL_SCALE_6G:
+		return 6;
+		break;
+	case SENSOR_ACC_FULL_SCALE_8G:
+		return 8;
+		break;
+	case SENSOR_ACC_FULL_SCALE_16G:
+	default:
+		return 16;
+		break;
+	}
 }
 
 enum sensor_AccRate sensor_getAccRate(){
 	return base.acc.rate;
 }
 
+uint32_t sensor_getAccRateInt(){
+	switch(base.acc.rate){
+	case SENSOR_ACC_RATE_3HZ125:
+		return 3125;
+		break;
+	case SENSOR_ACC_RATE_6HZ25:
+		return 6250;
+		break;
+	case SENSOR_ACC_RATE_12HZ5:
+		return 12500;
+		break;
+	case SENSOR_ACC_RATE_25HZ:
+		return 25000;
+		break;
+	case SENSOR_ACC_RATE_50HZ:
+		return 50000;
+		break;
+	case SENSOR_ACC_RATE_100HZ:
+		return 100000;
+		break;
+	case SENSOR_ACC_RATE_200HZ:
+		return 200000;
+		break;
+	case SENSOR_ACC_RATE_400HZ:
+		return 400000;
+		break;
+	case SENSOR_ACC_RATE_800HZ:
+		return 800000;
+		break;
+	case SENSOR_ACC_RATE_1600HZ:
+	default:
+		return 1600000;
+		break;
+	}
+}
 
 void sensor_task(void * params){
 	UNUSED(params);
 
 	enum EventNotification evtNotification;
+	struct sensor_Output output;
 	while(1){
 		switch(base.state){
 		case STATE_IDLE:
 			/* block until active state requested by sensor_start() function. */
 			xSemaphoreTake(base.goActiveSemph, portMAX_DELAY);
 			/* make initial data read to unblock interrupts */
-			uint8_t temp = 0;
-			readSensorRegister(STATUS_A, &temp);
-			readSensorRegister(OUT_X_L_A, &temp);
-			readSensorRegister(OUT_X_H_A, &temp);
-			readSensorRegister(OUT_Y_L_A, &temp);
-			readSensorRegister(OUT_Y_H_A, &temp);
-			readSensorRegister(OUT_Z_L_A, &temp);
-			readSensorRegister(OUT_Z_H_A, &temp);
-			/* temp usun ? */
-			for(int i = 0; i < 80; i++){
+			readSensorRegisters(OUT_X_L_A, base.auxTab, 6);
 
-			}
-
+			base.state = STATE_ACTIVE;
 			break;
 		case STATE_ACTIVE:
 			/* Block in waiting for new data or event detection interrupt*/
 			xQueueReceive(base.evtQueue, &evtNotification, portMAX_DELAY);
-			/*check if new data is available or event occured */
+			/* Check if new data is available or event occured */
 			switch(evtNotification){
 			case NEW_DATA:
-				__NOP();
-				/* specify new data type, read it and put into sensorOutQueue TODO */
+				/* specify new data type, read it and put into sensor output queue */
 				readSensorRegister(STATUS_A, base.auxTab);
+
 				/* if accelerometer data ready */
 				if(base.auxTab[0] && STATUS_A_ZYXADA){
 
-					struct sensor_Output output;
 					output.type = SENSOR_OUT_ACC_DATA;
 					/* read and decode accelerometer data */
-					readSensorRegister(OUT_X_L_A, &base.auxTab[0]);
-					readSensorRegister(OUT_X_H_A, &base.auxTab[1]);
-					readSensorRegister(OUT_Y_L_A, &base.auxTab[2]);
-					readSensorRegister(OUT_Y_H_A, &base.auxTab[3]);
-					readSensorRegister(OUT_Z_L_A, &base.auxTab[4]);
-					readSensorRegister(OUT_Z_H_A, &base.auxTab[5]);
-					output.xyzData.x = base.auxTab[0] | ( base.auxTab[1] << 8 );
-					output.xyzData.y = base.auxTab[2] | ( base.auxTab[3] << 8 );
-					output.xyzData.z = base.auxTab[4] | ( base.auxTab[5] << 8 );
+					readSensorRegisters(OUT_X_L_A, base.auxTab, 6);
+					output.xyzData.x = ( ( base.auxTab[0] | ( base.auxTab[1] << 8)));
+					output.xyzData.x = ( (double) (output.xyzData.x) / INT16_MAX ) * 1000.0 * sensor_getAccFullScaleInt();
+					output.xyzData.y = ( ( base.auxTab[2] | ( base.auxTab[3] << 8 )) );
+					output.xyzData.y = ( (double) (output.xyzData.y) / INT16_MAX ) * 1000.0 * sensor_getAccFullScaleInt();
+					output.xyzData.z = ( ( base.auxTab[4] | ( base.auxTab[5] << 8 )) );
+					output.xyzData.z = ( (double) (output.xyzData.z) / INT16_MAX ) * 1000.0 * sensor_getAccFullScaleInt();
 
 					xQueueSendToBack(base.sensorOutputQueue, &output, portMAX_DELAY);
 				}
-				/* Add magnetometer and temperature read here */
+				/* Add magnetometer and temperature read here in future */
 				break;
 			case NEW_DETECTION:
-				/* specify new detection type and put it into sensorOutQueue TODO */
-
+				/* specify new detection type and put it into sensor output queue*/
+				readSensorRegister(CLICK_SRC, base.auxTab);
+				if(base.auxTab[0] & CLICK_SRC_Z){
+					output.type = SENSOR_OUT_CLICK_DETECTION;
+					xQueueSendToBack(base.sensorOutputQueue, &output, portMAX_DELAY);
+				}
 				break;
 			}
 			break;
@@ -369,6 +431,7 @@ void sensor_task(void * params){
 	}
 }
 
+/* Interrupts on sensor data ready or event detection signals */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	BaseType_t higherPriorityTaskWoken = pdFALSE;
@@ -382,10 +445,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	portEND_SWITCHING_ISR(higherPriorityTaskWoken);
 }
 
+
 void EXTI0_IRQHandler(void)
 {
   HAL_GPIO_EXTI_IRQHandler(INT1_GPIO_PIN);
 }
+
 
 void EXTI1_IRQHandler(void)
 {
