@@ -1,5 +1,4 @@
-# PC accelerometer
-## _Wiktor Lechowicz_   
+# PC accelerometer 
 
 PC acceloremeter is a STM32 MCU based interface for operating accelerometer sensor via personal computer.
 Key features are:
